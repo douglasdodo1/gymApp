@@ -1,11 +1,12 @@
-const { PrismaClient } = require('@prisma/client');
-
-const prisma = new PrismaClient();
+import { db } from "../db";
 
 export const getTypeTrainning = async () => {
-    const type =  await prisma.typeTrainning.findMany();
-    console.log(type);
-    
+    const type =  await db.typeTrainning.findMany({
+        include: {
+            trainning: true,
+        },
+    });
+
     return type;
 }
 
