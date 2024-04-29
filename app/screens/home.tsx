@@ -1,31 +1,36 @@
 import { Button, ButtonText, Text, View } from '@gluestack-ui/themed';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import _, { forEach } from 'lodash';
+import _, { forEach, forIn } from 'lodash';
 import { getTrainning } from '../../api/trainning/read';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 export const HomePage = () =>{
     interface TypeData {
         id: number;
+        name: string;
         type: string;
-        trainning: {
-        id: number;
+    };
+
+    interface trainning {
         exercise: string;
+        id: number;
         quantity: number;
         series: number;
         typeTrainningId: number;
-        }[];
-      };
+    };
 
     const [dataType, setDataType] = useState<any[]>([]);
     const [typesOn, setTypesOn] = useState<boolean>(false);
     const [currentType, setCurrentType] = useState<string>('ABC');
-    const [currentTrainning, setCurrentTrainning] = useState<any[]>([]);
+    const [currentTrainning, setCurrentTrainning] = useState<trainning[]>([]);
     const [allTypes, setAllTypes] = useState<TypeData[]>([]);
+    const [progressExercise, setProgressExercise] = useState<number[]>(Array(1).fill(0));
+
 
     const getType = async () => {
         try {
-            const response = await fetch('http://150.161.11.14:3000/getTypeTrainning');
+            const response = await fetch('http://192.168.239.211:3000/getTypeTrainning');
             const type = await response.json();
             setAllTypes(type);
             
@@ -36,7 +41,6 @@ export const HomePage = () =>{
             
             setDataType(tempType);
             setTypesOn(!typesOn);
-            
         } catch (error) {
             throw error;
         }
@@ -45,7 +49,7 @@ export const HomePage = () =>{
     const getCurrentTrainning = async (trainningType:any) =>{
         setCurrentType(trainningType.type);
          try {
-            const response = await fetch('http://150.161.11.14:3000/getTrainning',{
+            const response = await fetch('http://192.168.239.211:3000/getTrainning',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -55,10 +59,13 @@ export const HomePage = () =>{
                 })
             });
             const trainning = await response.json();
-            console.log(trainning);
             setCurrentTrainning(trainning);
             setTypesOn(false);
 
+            const tempProgressExercise:number[] = Array(currentTrainning.length).fill(0);
+            tempProgressExercise[0] = 50;
+            setProgressExercise(tempProgressExercise);
+            
          } catch (error) {
             throw error;
          }
@@ -66,7 +73,7 @@ export const HomePage = () =>{
     
     return(
         <View style={{backgroundColor:'#1a1a1a', width:'100%', height:'100%', borderTopWidth:1, borderTopColor:'black', flex:1, alignItems:'center', justifyContent:'center'}}>
-            <View style={{width:'80%', height:'80%', borderWidth:1, borderColor:'#005B41', borderRadius:20}}>
+            <View style={{width:'95%', height:'95%', borderWidth:1, borderColor:'#005B41', borderRadius:20}}>
                 <View style={{width:'100%', height:'20%', borderBottomWidth:1, justifyContent:'center', alignItems:'center', flex:1, flexDirection:'row', borderColor:'#005B41'}}>
                     <View style={{width:'91.5%', justifyContent:'flex-end', alignItems:'center'}}>
                         <Text style={{fontSize:60, color: '#F5F5F5', marginLeft:20}}>{currentType}</Text>
@@ -86,13 +93,36 @@ export const HomePage = () =>{
                                     <ButtonText style={{fontSize:40, color: '#F5F5F5'}}>{item.type}</ButtonText>
                                 </Button>
                             </View>
-                        )) : (currentTrainning.map((item,index)=>(
-                            <View key={index} style={{width:'100%',height:40 ,justifyContent:'center', alignItems:'center', borderBottomWidth:1, borderColor:'#008170', flexDirection:'row'}}>                                
-                                    <View style={{borderRightWidth:1, borderColor:'#008170', width:'50%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:18, color: '#F5F5F5'}}>{item.exercise}</Text></View>
-                                    <View style={{borderRightWidth:1, borderColor:'#008170', width:'25%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:18, color: '#F5F5F5'}}>{item.quantity}</Text></View>
-                                    <View style={{width:'25%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:18, color: '#F5F5F5'}}>{item.series}</Text></View>
-                            </View>
-                        )))}
+                        )) :(
+                            <>
+                                <View style={{width:'100%',height:40 ,justifyContent:'center', alignItems:'center', borderBottomWidth:1, borderColor:'#008170', flexDirection:'row', backgroundColor:'#049662'}}>                                
+                                    <View style={{borderRightWidth:1, borderColor:'#008170', width:'40%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>exercicio</Text></View>
+                                    <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>Reps</Text></View>
+                                    <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>Series</Text></View>
+                                    <View style={{width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>estado</Text></View>
+                                </View>
+                                
+                                {currentTrainning.map((item,index)=>(
+                                    <View key={index} style={{width:'100%',height:40 ,justifyContent:'center', alignItems:'center', borderBottomWidth:1, borderColor:'#008170', flexDirection:'row'}}>                                
+                                        <View style={{borderRightWidth:1, borderColor:'#008170', width:'40%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.exercise}</Text></View>
+                                        <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.quantity}</Text></View>
+                                        <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.series}</Text></View>
+                                        <View style={{width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}>
+                                            <Button>
+                                                <AnimatedCircularProgress
+                                                size={30}
+                                                width={5}
+                                                fill={progressExercise[index]}
+                                                tintColor="#00e0ff"
+                                                backgroundColor="#3d5875"
+                                                />
+                                            </Button>
+                                            
+                                        </View>
+                                    </View>
+                                ))}
+                            </>
+                        )}
                 </View>
 
                 <View style={{width:'100%', height:'10%', borderTopWidth:1, alignItems:'center', borderColor:'#005B41'}}>

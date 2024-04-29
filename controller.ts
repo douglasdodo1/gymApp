@@ -3,7 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTypeTrainning } from './api/typeTrainning/read';
 import { getTrainning } from './api/trainning/read';
-
+  
 const app = express();
 
 app.use(cors());
@@ -19,7 +19,7 @@ app.post('/getTrainning', async (req: Request, res: Response) => {
   const id = req.body;
   console.log(id.id);
   
-  const trainning = await getTrainning(id);
+  const trainning = await getTrainning(id.id);
   console.log(trainning);
   
   res.send(trainning);
