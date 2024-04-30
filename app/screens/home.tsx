@@ -1,5 +1,5 @@
 import { Button, ButtonText, Text, View } from '@gluestack-ui/themed';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import _, { forEach, forIn } from 'lodash';
 import { getTrainning } from '../../api/trainning/read';
@@ -26,11 +26,38 @@ export const HomePage = () =>{
     const [currentTrainning, setCurrentTrainning] = useState<trainning[]>([]);
     const [allTypes, setAllTypes] = useState<TypeData[]>([]);
     const [progressExercise, setProgressExercise] = useState<number[]>(Array(1).fill(0));
+    const [progressExerciseIspressed, setProgressExerciseIspressed] = useState<boolean>(false);
+    const [progressExerciseIndex, setProgressExerciseIndex] = useState<number>(-1);
+
+    useEffect(() => {
+        if (progressExerciseIspressed) {
+            const interval = setInterval(() => {
+                if (progressExerciseIspressed) {
+                    setProgressExercise(prevProgressExercise => {
+                        const updatedProgressExercise = [...prevProgressExercise];
+                        updatedProgressExercise[progressExerciseIndex] += 10;
+                        return updatedProgressExercise;
+                    });
+                    console.log(progressExercise);
+                }
+                
+                
+            }, 150);
+    
+            return () => clearInterval(interval); 
+        }
+
+        
+
+    },[progressExerciseIspressed]);
+
+
+
 
 
     const getType = async () => {
         try {
-            const response = await fetch('http://192.168.239.211:3000/getTypeTrainning');
+            const response = await fetch('http://150.161.11.14:3000/getTypeTrainning');
             const type = await response.json();
             setAllTypes(type);
             
@@ -49,7 +76,7 @@ export const HomePage = () =>{
     const getCurrentTrainning = async (trainningType:any) =>{
         setCurrentType(trainningType.type);
          try {
-            const response = await fetch('http://192.168.239.211:3000/getTrainning',{
+            const response = await fetch('http://150.161.11.14:3000/getTrainning',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -59,17 +86,32 @@ export const HomePage = () =>{
                 })
             });
             const trainning = await response.json();
-            setCurrentTrainning(trainning);
             setTypesOn(false);
 
-            const tempProgressExercise:number[] = Array(currentTrainning.length).fill(0);
-            tempProgressExercise[0] = 50;
+            const tempProgressExercise:number[] = [];
+            for (let index = 0; index < trainning.length; index++) {
+                tempProgressExercise[index] = 0;                
+            }
+            console.log(tempProgressExercise);
+            
             setProgressExercise(tempProgressExercise);
+            setCurrentTrainning(trainning);
             
          } catch (error) {
             throw error;
          }
     }
+
+    const setFinishedExercises = async (index: number) => {
+        const newProgress = [...progressExercise];
+    
+        for (let i = newProgress[index]; i < 100 && progressExerciseIspressed; i += 0.005) {
+            newProgress[index] = i;
+            setProgressExercise(newProgress);
+    
+        }
+    };
+    
     
     return(
         <View style={{backgroundColor:'#1a1a1a', width:'100%', height:'100%', borderTopWidth:1, borderTopColor:'black', flex:1, alignItems:'center', justifyContent:'center'}}>
@@ -108,9 +150,11 @@ export const HomePage = () =>{
                                         <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.quantity}</Text></View>
                                         <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.series}</Text></View>
                                         <View style={{width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}>
-                                            <Button>
+                                            <Button 
+                                            onPressIn={()=>{setProgressExerciseIspressed(true);setProgressExerciseIndex(index)}}
+                                            onPressOut={() => {setProgressExerciseIspressed(false);setProgressExerciseIndex(index)}}>
                                                 <AnimatedCircularProgress
-                                                size={30}
+                                                size={progressExerciseIspressed && progressExerciseIndex === index ? 100 : 30}
                                                 width={5}
                                                 fill={progressExercise[index]}
                                                 tintColor="#00e0ff"
