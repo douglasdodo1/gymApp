@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { HomePage } from '../screens/home';
+import { NewTrainning } from '../screens/newTrainning';
 import { StatusBar } from 'react-native';0
 
 const Stack = createNativeStackNavigator();
@@ -16,6 +17,7 @@ export default function App() {
           headerShadowVisible:false
         }}>
         <Stack.Screen name='GymApp' component={HomePage}/>
+        <Stack.Screen name='NewTrainning' component={NewTrainning}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,4 +1,4 @@
-import { GluestackUIProvider} from '@gluestack-ui/themed';
+import { GluestackUIProvider, View} from '@gluestack-ui/themed';
 import AppNavigator from './app/navigation/AppNavigator';
 
 export default function App() {

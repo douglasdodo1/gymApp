@@ -14,7 +14,6 @@ datasource db {
 model TypeTrainning {
   id Int @id @default(autoincrement())
   type String  @unique
-  name  String?
   trainning Trainning[]
 }
 
@@ -25,4 +24,9 @@ model Trainning{
   quantity Int
   typeTrainningId Int 
   typeTrainning TypeTrainning @relation(fields: [typeTrainningId], references: [id])
+}
+
+model Exercises{
+  id Int @id @default(autoincrement())
+  name String 
 }

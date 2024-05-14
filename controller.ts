@@ -3,6 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getTypeTrainning } from './api/typeTrainning/read';
 import { getTrainning } from './api/trainning/read';
+import { getExercise } from './api/exercise/read';
   
 const app = express();
 
@@ -13,6 +14,11 @@ app.use(bodyParser.json());
 app.get('/getTypeTrainning', async (req: Request, res: Response) => {
   const type = await getTypeTrainning();
   res.send(type);
+});
+
+app.get('/getExercises', async (req: Request, res: Response) => {
+  const exercises = await getExercise();
+  res.send(exercises);
 });
 
 app.post('/getTrainning', async (req: Request, res: Response) => {
