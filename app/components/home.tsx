@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { TextInput } from 'react-native';
+
 
 interface HomeProps {
   navigation: NavigationProp<ParamListBase>;
@@ -58,7 +60,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     const getType = async () => {
         try {
             
-            const response = await fetch('http://192.168.18.32:3000/getTypeTrainning');
+            const response = await fetch('http://150.161.197.115:3000/getTypeTrainning');
             const type = await response.json();
             setAllTypes(type);
             
@@ -75,7 +77,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     const getCurrentTrainning = async (trainningType:any) =>{
         setCurrentType(trainningType.type);
          try {
-            const response = await fetch('http://192.168.18.32:3000/getTrainning',{
+            const response = await fetch('http://150.161.197.115:3000/getTrainning',{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -99,6 +101,10 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
          } catch (error) {
             throw error;
          }
+    }
+
+    const handleUpdateTrainning = async (trainning:any) =>{
+        
     }
 
     return(
@@ -135,8 +141,12 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                                 {currentTrainning.map((item,index)=>(
                                     <View key={index} style={{width:'100%',height:40 ,justifyContent:'center', alignItems:'center', borderBottomWidth:1, borderColor:'#008170', flexDirection:'row'}}>                                
                                         <View style={{borderRightWidth:1, borderColor:'#008170', width:'40%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.exercise}</Text></View>
-                                        <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.quantity}</Text></View>
-                                        <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.series}</Text></View>
+                                        <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}>
+                                            <TextInput ><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.quantity}</Text></TextInput>
+                                        </View>
+                                        <View style={{borderRightWidth:1, borderColor:'#008170', width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}>
+                                            <TextInput ><Text style={{fontSize:16, color: '#F5F5F5'}}>{item.series}</Text></TextInput>
+                                        </View>
                                         <View style={{width:'20%', height:'100%', alignItems:'center', justifyContent:'center'}}>
                                             <Button 
                                             onPressIn={()=>{setProgressExerciseIspressed(true);setProgressExerciseIndex(index)}}
