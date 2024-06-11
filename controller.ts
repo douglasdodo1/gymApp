@@ -8,6 +8,7 @@ import { createTypeTrainning } from './api/typeTrainning/create';
 import { Trainning, TypeTrainning } from '@prisma/client';
 import { updateTypeTrainning } from './api/typeTrainning/update';
 import { updateTrainning } from './api/trainning/update';
+import { updateManyTrainning } from './api/trainning/updateMany';
   
 const app = express();
 
@@ -38,6 +39,16 @@ app.patch('/updateTrainning', async (req: Request, res: Response) => {
   res.send(updatedTrainning);
 });
 
+app.patch('/updateManyTrainning', async (req: Request, res: Response) => {
+  const trainning:Trainning[] = req.body.currentTrainning;
+  console.log(trainning);
+  
+  const updatedTrainning = await updateManyTrainning(trainning);
+
+  console.log(getTrainning(1));
+  
+  res.send(updatedTrainning);
+});
 
 app.post ('/updateTypeTrainning', async (req: Request, res: Response) => {
   const typeTrainning = req.body;
