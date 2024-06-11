@@ -24,7 +24,7 @@ model Trainning{
   quantity Int
   typeTrainningId Int 
   typeTrainning TypeTrainning @relation(fields: [typeTrainningId], references: [id])
-  subType Int?
+  subType String
 }
 
 model Exercises{

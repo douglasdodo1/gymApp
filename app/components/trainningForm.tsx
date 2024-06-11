@@ -24,7 +24,7 @@ export const TrainningForm = () => {
 
   const getType = async () => {
     try {
-      const response = await fetch('http://192.168.61.104:3000/getTypeTrainning');
+      const response = await fetch('http://150.161.11.14:3000/getTypeTrainning');
       const type = await response.json();
       setAllTypes(type);
       setTrainningSelectIsPressed(!trainningSelectIsPressed);
@@ -35,7 +35,7 @@ export const TrainningForm = () => {
 
   const getExercises = async () => {
     try {
-      const response = await fetch('http://192.168.61.104:3000/getExercises');
+      const response = await fetch('http://150.161.11.14:3000/getExercises');
       const exercises = await response.json();
       setExercises(exercises);
     } catch (error) {
@@ -45,7 +45,7 @@ export const TrainningForm = () => {
 
   const handleUpdateTypeTrainning = async () => {
     try {
-      await fetch('http://192.168.61.104:3000/updateTypeTrainning', {
+      await fetch('http://150.161.11.14:3000/updateTypeTrainning', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

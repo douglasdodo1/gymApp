@@ -30,19 +30,35 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     borderColor: '#005B41',
   },
-  headerTextContainer: {
-    width: '91.5%',
-    justifyContent: 'flex-end',
+  headerElementsCenter: {
+    width: '100%',
+    height:'100%',
+    justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
   },
-  headerText: {
-    fontSize: 60,
-    color: '#F5F5F5',
-    marginLeft: 20,
+  headerTextCenter: {
+    flexDirection: 'row',
   },
+  headerleftBox:{
+    height:'100%', 
+    width:'10%',
+  },
+  headerCentralBox: {
+    height:'100%', 
+    width:'80%', 
+    flex:1, 
+    flexDirection:'row', 
+    alignItems:'center', 
+    justifyContent:'center', 
+    gap:10
+  },
+
   headerButton: {
-    flex: 1,
-    height: '100%',
+    height:'100%', 
+    width:'10%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
   },
   content: {
     width: '100%',
