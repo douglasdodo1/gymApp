@@ -5,6 +5,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { TextInput } from 'react-native';
 import { styles } from '../styles/home';
+import { Trainning } from '@prisma/client';
 
 interface HomeProps {
   navigation: NavigationProp<ParamListBase>;
@@ -16,23 +17,18 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     type: string;
   };
 
-  interface trainning {
-    exercise: string;
-    id: number;
-    quantity: number;
-    series: number;
-    typeTrainningId: number;
-  };
+
 
   const [dataType, setDataType] = useState<typeTrainning[]>([]);
   const [typesOn, setTypesOn] = useState<boolean>(false);
   const [currentType, setCurrentType] = useState<string[]>(['select']);
-  const [currentTrainning, setCurrentTrainning] = useState<trainning[]>([]);
+  const [currentTrainning, setCurrentTrainning] = useState<Trainning[]>([]);
+  const [subTypeSelected, setsubTypeSelected] = useState<boolean[]>([]);
   const [allTypes, setAllTypes] = useState<typeTrainning[]>([]);
   const [progressExercise, setProgressExercise] = useState<number[]>(Array(1).fill(0));
   const [progressExerciseIspressed, setProgressExerciseIspressed] = useState<boolean>(false);
   const [progressExerciseIndex, setProgressExerciseIndex] = useState<number>(-1);
-  const [deletedExercises, setDeletedExercises] = useState<trainning[]>([]);
+  const [deletedExercises, setDeletedExercises] = useState<Trainning[]>([]);
 
   useEffect(() => {
     if (progressExerciseIspressed) {
@@ -52,7 +48,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
 
   const getType = async () => {
     try {
-      const response = await fetch('http://192.168.61.104:3000/getTypeTrainning');
+      const response = await fetch('http://150.161.11.14:3000/getTypeTrainning');
       const type = await response.json();
       setAllTypes(type);
 
@@ -60,6 +56,11 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
 
       setDataType(tempType);
       setTypesOn(!typesOn);
+      setsubTypeSelected((prev) => {
+        let newSubTypeSelected = [...prev];
+        newSubTypeSelected = newSubTypeSelected.fill(false);
+        return newSubTypeSelected;
+      });
     } catch (error) {
       throw error;
     }
@@ -70,7 +71,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
     console.log(currentType);
     
     try {
-      const response = await fetch('http://192.168.61.104:3000/getTrainning', {
+      const response = await fetch('http://150.161.11.14:3000/getTrainning', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -96,7 +97,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
 
   const handleUpdateTrainning = async () => {
     try {
-      const response = await fetch('http://192.168.61.104:3000/updateManyTrainning', {
+      const response = await fetch('http://150.161.11.14:3000/updateManyTrainning', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
@@ -125,35 +126,59 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
         ));
   }
 
-  const setSelectedExercises = (exercise: trainning) => {
+  const setSelectedExercises = (exercise: Trainning) => {
     setDeletedExercises(() => {
-      const tempNewExercises: trainning[] = [...deletedExercises];
+      const tempNewExercises: Trainning[] = [...deletedExercises];
       tempNewExercises.push(exercise);
       return tempNewExercises;
     });
   }
 
-  const deleteSelectedExercises = (exercise: trainning) => {
+  const deleteSelectedExercises = (exercise: Trainning) => {
     setDeletedExercises(() => {
-      const tempNewExercises: trainning[] = deletedExercises.filter(element => element.id !== exercise.id);
+      const tempNewExercises: Trainning[] = deletedExercises.filter(element => element.id !== exercise.id);
+      
       return tempNewExercises;
     });
   }
 
-  const filterExercises = () =>{}
+
+  const updateSubTypeSelection = (index:number) =>{
+    
+    setsubTypeSelected((prev) => {
+      let newSubTypeSelected = [...prev];
+      newSubTypeSelected = newSubTypeSelected.fill(false);
+      newSubTypeSelected[index] =!newSubTypeSelected[index];
+      console.log(newSubTypeSelected.findIndex((element) => element === true));
+      return newSubTypeSelected;
+    });
+
+   
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.header}>
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerText}>{currentType}</Text>
+          <View style={styles.headerElementsCenter}>
+            <View style={styles.headerleftBox}/>
+            <View  style={styles.headerCentralBox}>
+              {currentType.map((type, index) =>(
+                <Button key={index} >
+                  <ButtonText style={{fontSize:subTypeSelected[index] == true ? 80 : 60, 
+                                      color: subTypeSelected[index] == true ? '#36c9bd' : '#F5F5F5'}} 
+                  onPress={() => updateSubTypeSelection(index)}>{type}</ButtonText>
+                </Button>
+              ))}
+            </View>
+            <View style={styles.headerButton}>
+              <Button onPress={getType}>
+                <Icon name="pencil" size={25} color="#049662" />
+              </Button>
+            </View>
+            
           </View>
-          <View style={styles.headerButton}>
-            <Button onPress={getType}>
-              <Icon name="pencil" size={25} color="#049662" />
-            </Button>
-          </View>
+          
         </View>
 
         <View style={styles.content}>
@@ -172,9 +197,9 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                   <View style={[styles.exerciseColumn, styles.exerciseColumn20]}><Text style={styles.exerciseHeaderText}>Series</Text></View>
                   <View style={[styles.exerciseColumn, styles.exerciseColumn20]}><Text style={styles.exerciseHeaderText}>estado</Text></View>
                 </View>
-
-                {currentTrainning.map((item, index) => (
-                  <View key={index}>
+                {
+                currentTrainning.filter(element => currentType.length > 1 && element.subType == currentType[1]).map((item, index) => (
+                  <View key={index} >
                     <Button
                       onPress={() => {!deletedExercises.includes(item) ? setSelectedExercises(item) : deleteSelectedExercises(item) }}
                       style={[styles.exerciseRow, deletedExercises.includes(item) && styles.exerciseRowSelected]}>
@@ -198,13 +223,19 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                             <Button
                             onPressIn={() => { setProgressExerciseIspressed(true); setProgressExerciseIndex(index) }}
                             onPressOut={() => { setProgressExerciseIspressed(false); setProgressExerciseIndex(index) }}>
-                            <AnimatedCircularProgress
-                                size={progressExerciseIspressed && progressExercise[progressExerciseIndex] <= 110 && progressExerciseIndex === index ? 100 : 30}
-                                width={progressExerciseIspressed && progressExercise[progressExerciseIndex] <= 110 && progressExerciseIndex === index ? 15 : 5}
-                                fill={progressExercise[index]}
-                                tintColor="#00e0ff"
-                                backgroundColor="#3d5875"
-                            />
+                            {
+                              currentTrainning != null ? 
+                              <AnimatedCircularProgress
+                              size={progressExerciseIspressed && progressExercise[progressExerciseIndex] <= 110 && progressExerciseIndex === index ? 100 : 30}
+                              width={progressExerciseIspressed && progressExercise[progressExerciseIndex] <= 110 && progressExerciseIndex === index ? 15 : 5}
+                              fill={progressExercise[index]}
+                              tintColor="#00e0ff"
+                              backgroundColor="#3d5875"
+                              />
+                              :
+                              <></>
+                            }
+                            
                             </Button>
                         </View>
                     </Button>
