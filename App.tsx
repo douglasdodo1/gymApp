@@ -6,16 +6,9 @@ import { StyleSheet } from 'react-native';
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={styles.container}>
       <GluestackUIProvider>
         <AppNavigator />
       </GluestackUIProvider>
-    </GestureHandlerRootView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
