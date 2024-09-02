@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
         alignItems:'center',
         borderBottomWidth:1,
         borderColor:'#008170',
-        flexDirection:'row', backgroundColor:'#049662'
+        flexDirection:'column', backgroundColor:'#049662'
     },
     bodyText:{
         borderColor:'#008170',
@@ -47,5 +47,26 @@ export const styles = StyleSheet.create({
         height:'100%',
         alignItems:'center',
         justifyContent:'center'
-    }
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderWidth: 2,
+        borderColor: '#000',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor:'white',
+      },
+      checked: {
+        backgroundColor: '#000',
+      },
+      checkmark: {
+        width: 12,
+        height: 12,
+        backgroundColor: '#fff',
+      },
+      label: {
+        fontSize: 18,
+        marginTop: 10,
+      },
 });

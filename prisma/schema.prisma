@@ -19,12 +19,14 @@ model TypeTrainning {
 
 model Trainning{
   id Int @id @default(autoincrement())
+  order Int 
   exercise String
   series Int 
   quantity Int
   typeTrainningId Int 
   typeTrainning TypeTrainning @relation(fields: [typeTrainningId], references: [id])
   subType String
+  state Boolean @default(false)
 }
 
 model Exercises{
