@@ -1,25 +1,27 @@
 import { Trainning } from "@prisma/client";
 import { db } from "../db";
+import { indexOf } from "lodash";
 
 export const updateManyTrainning = async (trainning: Trainning[]): Promise<any> => {
     try {
         const promises = trainning.map(async (item) => {
             const updatedTrainning = await db.trainning.update({
                 where: {
-                    typeTrainningId: 1,
-                    id: item.id
+                    typeTrainningId: item.typeTrainningId,
+                    id: item.id,
                 },
                 data: {
                     quantity: item.quantity,
-                    series: item.series
+                    series: item.series,
+                    order: indexOf(trainning,item)+1
                 }
             });
-            return updatedTrainning; // Retorna o resultado da atualização
+            return updatedTrainning; 
         });
         
-        const updatedTrainnings = await Promise.all(promises); // Aguarda todas as atualizações serem concluídas
+        const updatedTrainnings = await Promise.all(promises); 
 
-        return updatedTrainnings; // Retorna os resultados das atualizações
+        return updatedTrainnings; 
 
     } catch (error) {
         throw error;

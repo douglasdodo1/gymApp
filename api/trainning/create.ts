@@ -5,4 +5,4 @@ export const createTrainning = async (trainning: Trainning): Promise<Trainning> 
     return await db.trainning.create({
         data: trainning,
     })
-};
+}; 

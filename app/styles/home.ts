@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
     height:'100%', 
     width:'10%',
     justifyContent: 'flex-start',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   content: {
     width: '100%',
@@ -72,7 +72,7 @@ export const styles = StyleSheet.create({
     borderColor: '#008170',
   },
   typeButtonText: {
-    fontSize: 40,
+    fontSize: 50,
     color: '#F5F5F5',
   },
   exerciseHeader: {
@@ -124,7 +124,7 @@ export const styles = StyleSheet.create({
   },
   footerButtonsContainer: {
     height: '100%',
-    width: '50%',
+    width: '65%',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
