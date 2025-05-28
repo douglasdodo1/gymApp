@@ -28,30 +28,23 @@ O backend utiliza **Node.js + Express + Prisma** com banco de dados **SQLite**, 
 
 
 ## 💾 Estrutura do Banco (Prisma)
+### TypeTrainning
 
-prisma
-model TypeTrainning {
-  id     Int        @id @default(autoincrement())
-  type   String     @unique
-  trainning Trainning[]
-}
+#### Representa uma categoria de treino (ex: Peito, Perna)
 
-model Trainning {
-  id               Int     @id @default(autoincrement())
-  order            Int
-  exercise         String
-  series           Int
-  quantity         Int
-  typeTrainningId  Int
-  typeTrainning    TypeTrainning @relation(fields: [typeTrainningId], references: [id])
-  subType          String
-  state            Boolean @default(false)
-}
+#### Campos: type (string única)
 
-model Exercises {
-  id   Int    @id @default(autoincrement())
-  name String
-}
+### Trainning
+
+#### Representa um exercício em um treino específico
+
+#### Campos: order, exercise, series, quantity, subType, state, typeTrainningId
+
+### Exercises
+
+#### Banco de exercícios genéricos disponíveis para usar nos treinos
+
+#### Campo: name
 
 ## 📲 Funcionalidades
 
