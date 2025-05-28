@@ -48,15 +48,15 @@ O backend utiliza **Node.js + Express + Prisma** com banco de dados **SQLite**, 
 
 ## 📲 Funcionalidades
 
-### Criar e listar tipos de treino
+Criar e listar tipos de treino
 
-### Adicionar exercícios com ordem, série e repetições
+Adicionar exercícios com ordem, série e repetições
 
-### Atualizar dados de exercícios individualmente ou em lote
+Atualizar dados de exercícios individualmente ou em lote
 
-### Marcar exercícios como concluídos
+Marcar exercícios como concluídos
 
-### Resetar o progresso de treino
+Resetar o progresso de treino
 
 
 ## ⚙️ Como Rodar o Projeto
