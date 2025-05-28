@@ -107,7 +107,7 @@ Resetar o progresso de treino
 
 Caso esteja testando em um celular físico, altere o baseURL das requisições no frontend para apontar para o IP da sua máquina, por exemplo:
 
-'http://192.168.0.10:3000'; // IP da máquina
+'http://xxx.xxx.x.xx:3000'; // IP da máquina
 
 
 
